@@ -1,23 +1,47 @@
 import { useState } from "react";
 
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
+
+import Header from "./components/header/Navbar";
+
+import NotFound from "./pages/NotFound";
+import Login from "./pages/auth/Login";
+import Dashboard from "./pages/dashboard/Dashboard";
+import Workspaces from "./pages/workspaces/Workspaces";
+
 function App() {
-  const [count, setCount] = useState(0);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      {loggedIn && <Header />}
+      <Routes>
+        <Route
+          path="/"
+          element={loggedIn ? <Dashboard /> : <Navigate to="/login" />}
+        />
+
+        <Route
+          path="/login"
+          element={loggedIn ? <Navigate to="/" /> : <Login />}
+        />
+
+        <Route
+          path="/workspaces"
+          element={loggedIn ? <Workspaces /> : <Navigate to="/login" />}
+        />
+
+        <Route
+          path="*"
+          element={loggedIn ? <NotFound /> : <Navigate to="/login" />}
+        />
+      </Routes>
+    </Router>
   );
 }
 
